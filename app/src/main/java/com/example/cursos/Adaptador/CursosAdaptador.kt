@@ -19,6 +19,8 @@ class CursosAdaptador(
         val txtNombre: TextView = itemView.findViewById(R.id.txtCarrera)
         val txtSalon: TextView = itemView.findViewById(R.id.txtPrecio)
         val imgCurso: ImageView = itemView.findViewById(R.id.imgCarrera)
+        val btnVerDetalle: View = itemView.findViewById(R.id.btnVerDetalle)
+        val btnRegistrarse: View = itemView.findViewById(R.id.btnRegistrarse)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CursoViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,6 +38,13 @@ class CursosAdaptador(
             .placeholder(android.R.drawable.ic_menu_gallery)
             .error(android.R.drawable.stat_notify_error)
             .into(holder.imgCurso)
+
+        holder.btnVerDetalle.setOnClickListener {
+            activity.abrirDetalleCurso(curso)
+        }
+        holder.btnRegistrarse.setOnClickListener {
+            activity.abrirRegistroCurso(curso)
+        }
     }
     override fun getItemCount() = lista.size
 
