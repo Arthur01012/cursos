@@ -1,52 +1,58 @@
 package com.example.cursos.Presentador
 
-import com.example.cursos.Modelo.clsCarrerasModelo
 import com.example.cursos.Modelo.clsCursosModelo
+
+import com.example.cursos.Modelo.clsCarrerasModelo
+
+import com.example.cursos.Vista.CatalogoActivity
 import com.example.cursos.Modelo.dataCarrera
+import com.example.cursos.Modelo.dataCursos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class clsPresentadorCarrera {
-        private val modelo = clsCarrerasModelo()
-        private val modeloCursos = clsCursosModelo()
-        private var listaCarreras: List<dataCarrera> = emptyList()
+class clsPresentadorCarrera(val vista: CatalogoActivity)  {
 
-        fun iniciar()
-        {
-            CoroutineScope(Dispatchers.Main).launch {
-                try{
-                    listaCarreras = modelo.obtenerCarreras()
-                    vista.mostrarCarreras(listaCarreras)
+    private val modelo = clsCarrerasModelo()
+    private val modeloCursos = clsCursosModelo()
+    private var listaCarreras: List<dataCarrera> = emptyList()
 
-                    cargarCursos(0)
+    fun iniciar()
+    {
+        CoroutineScope(Dispatchers.Main).launch {
+            try{
 
-                }catch (e: Exception)
-                {
-                    vista.mostrarError("Error:"+e.localizedMessage)
-                }
-            }
-        }
-        fun seleccionarCarrera(position:Int)
-        {
-            if(position >= 0 && position < listaCarreras.size)
+                listaCarreras = modelo.obtenerCarreras()
+                vista.mostrarCarreras(listaCarreras)
+
+                cargarCursos(0)
+
+            }catch (e: Exception)
             {
-                val carrera = listaCarreras[position]
-                cargarCursos(carrera.idCarrera)
+                vista.mostrarError("Error:"+e.localizedMessage)
             }
         }
-        fun seleccionarCurso(curso: dataCursos) {
-            vista.abrirRegistroCurso(curso)
-        }
-        private fun cargarCursos(idCarrera: Int) {
-            CoroutineScope(Dispatchers.Main).launch {
-                try {
-                    val cursos = modeloCursos.obtenerCursos(idCarrera)
-                    vista.mostrarCursos(cursos)
-                } catch (e: Exception) {
-                    vista.mostrarError("Error al cargar cursos: " + e.localizedMessage)
-                }
-            }
-        }
-
     }
+    fun seleccionarCarrera(position:Int)
+    {
+        if(position >= 0 && position < listaCarreras.size)
+        {
+            val carrera = listaCarreras[position]
+            cargarCursos(carrera.idCarrera)
+        }
+    }
+    fun seleccionarCurso(curso: dataCursos) {
+        vista.abrirRegistroCurso(curso)
+    }
+    private fun cargarCursos(idCarrera: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val cursos = modeloCursos.obtenerCursos(idCarrera)
+                vista.mostrarCursos(cursos)
+            } catch (e: Exception) {
+                vista.mostrarError("Error al cargar cursos: " + e.localizedMessage)
+            }
+        }
+    }
+
+}

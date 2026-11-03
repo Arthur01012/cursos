@@ -7,7 +7,7 @@ class clsInscripcionModelo {
         return RetrofitCliente.apiService.obtenerAlumno(matricula)
     }
 
-    fun inscribirAlumno(solicitud: dataInscripcion): Call<dataRespuestaInscripcion> {
+    suspend fun inscribirAlumno(solicitud: dataInscripcion): Call<dataRespuestaInscripcion> {
         return RetrofitCliente.apiService.inscribirAlumno(solicitud)
     }
 }

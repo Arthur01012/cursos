@@ -13,10 +13,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.app_cursos.Adaptador.CursosAdaptador
-import com.example.app_cursos.Modelo.dataCarrera
-import com.example.app_cursos.Modelo.dataCursos
-import com.example.app_cursos.Presentador.clsPresentadorCarrera
+import com.example.cursos.Adaptador.CursosAdaptador
+import com.example.cursos.Modelo.dataCarrera
+import com.example.cursos.Modelo.dataCursos
+import com.example.cursos.Presentador.clsPresentadorCarrera
 import com.example.cursos.R
 import com.google.android.material.button.MaterialButton
 
