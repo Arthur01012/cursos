@@ -1,13 +1,13 @@
 package com.example.cursos.Modelo
 
-import com.example.app_cursos.InterfaceApi.ApiService
+import com.example.cursos.InterfaceApi.ApiService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object RetrofitCliente {
-    private const val BASE_URL = "http://192.168.1.11/curso_api/"
+    private const val BASE_URL = "http:///curso_api/"
     private val jsonConfig = Json{
         ignoreUnknownKeys=true
         coerceInputValues=true
