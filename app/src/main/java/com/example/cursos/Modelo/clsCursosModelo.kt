@@ -1,7 +1,9 @@
 package com.example.cursos.Modelo
 
+import retrofit2.Call
+
 class clsCursosModelo {
-    suspend fun obtenerCursos(idCarrera: Int): List<dataCursos> {
+    fun obtenerCursos(idCarrera: Int): Call<List<dataCursos>> {
         return RetrofitCliente.apiService.obtenerCursos(idCarrera)
     }
 }

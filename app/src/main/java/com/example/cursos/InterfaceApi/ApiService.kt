@@ -15,16 +15,16 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET(value = "filtrar_carrera.php")
-    suspend fun obtenerCarrera(): List<dataCarrera>
+    fun obtenerCarrera(): Call<List<dataCarrera>>
 
     @GET("obtener_carrera.php")
-    suspend fun obtenerCursos(@Query("idCarrera") idCarrera: Int): List<dataCursos>
+    fun obtenerCursos(@Query("idCarrera") idCarrera: Int): Call<List<dataCursos>>
 
     @GET("obtener_alumno.php")
     fun obtenerAlumno(@Query("matricula") matricula: String): Call<dataAlumno>
 
     @GET("obtener_registros.php")
-    suspend fun obtenerRegistros(@Query("idCarrera") idCarrera: Int): List<dataRegistro>
+    fun obtenerRegistros(@Query("idCarrera") idCarrera: Int): Call<List<dataRegistro>>
 
     @POST("inscribir.php")
      fun inscribirAlumno(@Body inscripcion: dataInscripcion): Call<dataRespuestaInscripcion>

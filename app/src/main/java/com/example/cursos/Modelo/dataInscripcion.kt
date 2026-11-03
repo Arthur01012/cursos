@@ -13,6 +13,5 @@ data class dataInscripcion(
 @Serializable
 data class dataRespuestaInscripcion(
     @SerialName("exito") val exito: Boolean,
-    @SerialName("mensaje") val mensaje: String,
-    @SerialName("id_inscripcion") val idInscripcion: Int? = null
+    @SerialName("mensaje") val mensaje: String
 )

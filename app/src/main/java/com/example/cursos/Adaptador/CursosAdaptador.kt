@@ -14,7 +14,7 @@ import com.example.cursos.Vista.CatalogoActivity
 class CursosAdaptador(
     private val activity: CatalogoActivity,
     private var lista: List<dataCursos>
-) : RecyclerView.Adapter<CursosAdaptador.CursoViewHolder>() {
+) : RecyclerView.Adapter<CursosAdaptador.CursoViewHolder>(), View.OnClickListener {
     class CursoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtNombre: TextView = itemView.findViewById(R.id.txtCarrera)
         val txtSalon: TextView = itemView.findViewById(R.id.txtPrecio)
@@ -39,13 +39,20 @@ class CursosAdaptador(
             .error(android.R.drawable.stat_notify_error)
             .into(holder.imgCurso)
 
-        holder.btnVerDetalle.setOnClickListener {
-            activity.abrirDetalleCurso(curso)
-        }
-        holder.btnRegistrarse.setOnClickListener {
-            activity.abrirRegistroCurso(curso)
+        holder.btnVerDetalle.tag = curso
+        holder.btnRegistrarse.tag = curso
+        holder.btnVerDetalle.setOnClickListener(this)
+        holder.btnRegistrarse.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View) {
+        val curso = view.tag as? dataCursos ?: return
+        when (view.id) {
+            R.id.btnVerDetalle -> activity.abrirDetalleCurso(curso)
+            R.id.btnRegistrarse -> activity.abrirRegistroCurso(curso)
         }
     }
+
     override fun getItemCount() = lista.size
 
     fun actualizarLista(nuevaLista: List<dataCursos>) {

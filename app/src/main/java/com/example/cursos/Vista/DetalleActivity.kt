@@ -1,17 +1,21 @@
 package com.example.cursos.Vista
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.cursos.Modelo.RetrofitCliente
 import com.example.cursos.R
 
-class DetalleActivity : AppCompatActivity() {
+class DetalleActivity : AppCompatActivity(),
+    View.OnClickListener,
+    OnApplyWindowInsetsListener {
 
     private lateinit var imgFondoCurso: ImageView
     private lateinit var btnBack: ImageView
@@ -26,11 +30,7 @@ class DetalleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_detalle)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), this)
 
         imgFondoCurso = findViewById(R.id.imgFondoCurso)
         btnBack = findViewById(R.id.btnBack)
@@ -46,9 +46,22 @@ class DetalleActivity : AppCompatActivity() {
     }
 
     private fun configurarListeners() {
-        btnBack.setOnClickListener {
+        btnBack.setOnClickListener(this)
+    }
+
+    override fun onClick(view: View) {
+        if (view.id == R.id.btnBack) {
             finish()
         }
+    }
+
+    override fun onApplyWindowInsets(
+        view: View,
+        insets: WindowInsetsCompat
+    ): WindowInsetsCompat {
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        return insets
     }
 
     private fun mostrarDetalleCurso() {
@@ -65,8 +78,12 @@ class DetalleActivity : AppCompatActivity() {
 
         val diasAtencion = intent.getStringExtra(EXTRA_DIAS_ATENCION).orEmpty()
         val horasAtencion = intent.getStringExtra(EXTRA_HORAS_ATENCION).orEmpty()
-        txtDias.text =
-            listOf(diasAtencion, horasAtencion).filter { it.isNotBlank() }.joinToString("\n")
+        txtDias.text = when {
+            diasAtencion.isNotBlank() && horasAtencion.isNotBlank() ->
+                "$diasAtencion\n$horasAtencion"
+            diasAtencion.isNotBlank() -> diasAtencion
+            else -> horasAtencion
+        }
 
         val rutaImagen = intent.getStringExtra(EXTRA_RUTA_IMAGEN)
         if (rutaImagen.isNullOrBlank()) {

@@ -1,13 +1,15 @@
 package com.example.cursos.Modelo
 
+import retrofit2.Call
 
 class clsCarrerasModelo {
-    suspend fun obtenerCarreras(): List<dataCarrera> {
-        val datos = RetrofitCliente.apiService.obtenerCarrera()
+    fun obtenerCarreras(): Call<List<dataCarrera>> {
+        return RetrofitCliente.apiService.obtenerCarrera()
+    }
 
+    fun incluirTodasLasCarreras(carreras: List<dataCarrera>): List<dataCarrera> {
         val listaFinal = mutableListOf(dataCarrera(0, "Todas las carreras"))
-        listaFinal.addAll(datos)
-
+        listaFinal.addAll(carreras)
         return listaFinal
     }
 }

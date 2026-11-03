@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
@@ -26,7 +27,11 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class RegistroActivity : AppCompatActivity() {
+class RegistroActivity : AppCompatActivity(),
+    View.OnClickListener,
+    TextView.OnEditorActionListener,
+    TextWatcher,
+    OnApplyWindowInsetsListener {
 
     private lateinit var presenterInscripcion: clsPresentadorInscripcion
     private lateinit var txtNombreCurso: TextView
@@ -35,6 +40,8 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var etFecha: TextView
     private lateinit var etCorreo: EditText
     private lateinit var btnConfirmar: MaterialButton
+    private lateinit var btnBack: ImageView
+    private lateinit var btnCancel: MaterialButton
     private var codigoCurso: String = ""
     private var matriculaConsultada: String = ""
     private var correoAlumno: String = ""
@@ -45,17 +52,16 @@ class RegistroActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_registro)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), this)
+
         txtNombreCurso = findViewById(R.id.txtNombreCurso)
         imgCurso = findViewById(R.id.imgCurso)
         etMatricula = findViewById(R.id.etMatricula)
         etFecha = findViewById(R.id.etFecha)
         etCorreo = findViewById(R.id.etCorreo)
         btnConfirmar = findViewById(R.id.btnConfirmar)
+        btnBack = findViewById(R.id.btnBack)
+        btnCancel = findViewById(R.id.btnCancel)
         presenterInscripcion = clsPresentadorInscripcion(this)
 
         codigoCurso = intent.getStringExtra(EXTRA_CODIGO_CURSO).orEmpty()
@@ -70,57 +76,62 @@ class RegistroActivity : AppCompatActivity() {
             mostrarError("No se recibió el código del curso.")
         }
     }
-    private fun configurarListeners() {
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                finish()
-            }
-        })
-        findViewById<MaterialButton>(R.id.btnCancel)
-            .setOnClickListener(object : View.OnClickListener {
-                override fun onClick(view: View?) {
-                    finish()
-                }
-            })
-        btnConfirmar.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                enviarInscripcion()
-            }
-        })
-        etMatricula.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-            override fun onEditorAction(
-                view: TextView?,
-                actionId: Int,
-                event: KeyEvent?
-            ): Boolean {
-                return buscarDatos(actionId)
-            }
-        })
-        etMatricula.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                texto: CharSequence?,
-                inicio: Int,
-                cantidad: Int,
-                despues: Int
-            ) {}
 
-            override fun onTextChanged(
-                texto: CharSequence?,
-                inicio: Int,
-                antes: Int,
-                cantidad: Int
-            ) {}
-
-            override fun afterTextChanged(texto: Editable?) {
-                if (matriculaConsultada.isNotEmpty() &&
-                    etMatricula.text.toString().trim() != matriculaConsultada
-                ) {
-                    limpiarDatosAlumno()
-                }
-            }
-        })
+    override fun onApplyWindowInsets(
+        view: View,
+        insets: WindowInsetsCompat
+    ): WindowInsetsCompat {
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        return insets
     }
-    private fun buscarDatos(actionId: Int): Boolean {
+
+    private fun configurarListeners() {
+        btnBack.setOnClickListener(this)
+        btnCancel.setOnClickListener(this)
+        btnConfirmar.setOnClickListener(this)
+        etMatricula.setOnEditorActionListener(this)
+        etMatricula.addTextChangedListener(this)
+    }
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.btnBack, R.id.btnCancel -> finish()
+            R.id.btnConfirmar -> enviarInscripcion()
+        }
+    }
+
+    override fun onEditorAction(
+        view: TextView?,
+        actionId: Int,
+        event: KeyEvent?
+    ): Boolean {
+        return buscarDatos()
+    }
+
+    override fun beforeTextChanged(
+        texto: CharSequence?,
+        inicio: Int,
+        cantidad: Int,
+        despues: Int
+    ) = Unit
+
+    override fun onTextChanged(
+        texto: CharSequence?,
+        inicio: Int,
+        antes: Int,
+        cantidad: Int
+    ) = Unit
+
+    override fun afterTextChanged(texto: Editable?) {
+        if (matriculaConsultada.isNotEmpty() &&
+            etMatricula.text.toString().trim() != matriculaConsultada
+        ) {
+            limpiarDatosAlumno()
+        }
+    }
+
+    private fun buscarDatos(): Boolean {
         val matricula = etMatricula.text.toString().trim()
         if (matricula.isBlank()) {
             etMatricula.error = "Ingresa tu matrícula."
