@@ -1,10 +1,10 @@
 package com.example.cursos.Presentador
 
-import com.example.app_cursos.Vista.RegistroActivity
-import com.example.app_cursos.Modelo.clsInscripcionModelo
-import com.example.app_cursos.Modelo.dataAlumno
-import com.example.app_cursos.Modelo.dataInscripcion
-import com.example.app_cursos.Modelo.dataRespuestaInscripcion
+import com.example.cursos.Vista.RegistroActivity
+import com.example.cursos.Modelo.clsInscripcionModelo
+import com.example.cursos.Modelo.dataAlumno
+import com.example.cursos.Modelo.dataInscripcion
+import com.example.cursos.Modelo.dataRespuestaInscripcion
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +37,7 @@ class clsPresentadorInscripcion(private val vista: RegistroActivity) {
         })
     }
 
-    fun inscribir(solicitud: dataInscripcion) {
+    suspend fun inscribir(solicitud: dataInscripcion) {
         vista.mostrarCargando(true)
         modelo.inscribirAlumno(solicitud).enqueue(object : Callback<dataRespuestaInscripcion> {
             override fun onResponse(
