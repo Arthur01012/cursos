@@ -196,7 +196,7 @@ class RegistroActivity : AppCompatActivity() {
                     !inscripcionEnviandose
     }
 
-    private fun enviarInscripcion() {
+    private  fun enviarInscripcion() {
         presenterInscripcion.inscribir(
             dataInscripcion(
                 codigoCurso = codigoCurso,

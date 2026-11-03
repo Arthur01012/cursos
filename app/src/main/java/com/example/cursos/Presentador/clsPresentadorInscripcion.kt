@@ -37,7 +37,7 @@ class clsPresentadorInscripcion(private val vista: RegistroActivity) {
         })
     }
 
-    suspend fun inscribir(solicitud: dataInscripcion) {
+     fun inscribir(solicitud: dataInscripcion) {
         vista.mostrarCargando(true)
         modelo.inscribirAlumno(solicitud).enqueue(object : Callback<dataRespuestaInscripcion> {
             override fun onResponse(

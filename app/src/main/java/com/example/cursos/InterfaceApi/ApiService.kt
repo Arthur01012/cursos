@@ -27,5 +27,5 @@ interface ApiService {
     suspend fun obtenerRegistros(@Query("idCarrera") idCarrera: Int): List<dataRegistro>
 
     @POST("inscribir.php")
-    suspend fun inscribirAlumno(@Body inscripcion: dataInscripcion): Call<dataRespuestaInscripcion>
+     fun inscribirAlumno(@Body inscripcion: dataInscripcion): Call<dataRespuestaInscripcion>
 }
