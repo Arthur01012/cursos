@@ -1,4 +1,4 @@
-package com.example.app_cursos.Adaptador
+package com.example.cursos.Adaptador
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.app_cursos.R
-import com.example.app_cursos.Vista.MainActivity
-import com.example.app_cursos.Modelo.dataCursos
+import com.example.cursos.R
+import com.example.cursos.Modelo.dataCursos
+import com.example.cursos.Vista.CatalogoActivity
 
 class CursosAdaptador(
-    private val activity: MainActivity,
+    private val activity: CatalogoActivity,
     private var lista: List<dataCursos>
 ) : RecyclerView.Adapter<CursosAdaptador.CursoViewHolder>() {
     class CursoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

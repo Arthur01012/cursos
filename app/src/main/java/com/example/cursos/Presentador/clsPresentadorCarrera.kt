@@ -1,5 +1,8 @@
-package com.example.app_cursos.Presentador
+package com.example.cursos.Presentador
 
+import com.example.cursos.Modelo.clsCarrerasModelo
+import com.example.cursos.Modelo.clsCursosModelo
+import com.example.cursos.Modelo.dataCarrera
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

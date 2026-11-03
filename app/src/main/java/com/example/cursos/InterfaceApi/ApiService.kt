@@ -1,7 +1,12 @@
-package com.example.app_cursos.InterfaceApi
+package com.example.cursos.InterfaceApi
 
-import com.example.app_cursos.Modelo.dataCarrera
-import com.example.app_cursos.Modelo.dataCursos
+
+import com.example.cursos.Modelo.dataAlumno
+import com.example.cursos.Modelo.dataCarrera
+import com.example.cursos.Modelo.dataCursos
+import com.example.cursos.Modelo.dataInscripcion
+import com.example.cursos.Modelo.dataRegistro
+import com.example.cursos.Modelo.dataRespuestaInscripcion
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET

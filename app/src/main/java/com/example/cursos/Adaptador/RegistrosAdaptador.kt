@@ -1,4 +1,4 @@
-package com.example.app_cursos.Adaptador
+package com.example.cursos.Adaptador
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.app_cursos.Modelo.RetrofitCliente
-import com.example.app_cursos.Modelo.dataRegistro
-import com.example.app_cursos.R
+import com.example.cursos.Modelo.RetrofitCliente
+import com.example.cursos.Modelo.dataRegistro
+import com.example.cursos.R
+
 
 class RegistrosAdaptador(
     private var lista: List<dataRegistro>
