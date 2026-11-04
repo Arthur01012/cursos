@@ -23,9 +23,7 @@ import com.example.cursos.Modelo.dataInscripcion
 import com.example.cursos.Presentador.clsPresentadorInscripcion
 import com.example.cursos.R
 import com.google.android.material.button.MaterialButton
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.LocalDate
 
 class RegistroActivity : AppCompatActivity(),
     View.OnClickListener,
@@ -161,7 +159,7 @@ class RegistroActivity : AppCompatActivity(),
     fun mostrarDatosAlumno(alumno: dataAlumno) {
         matriculaConsultada = alumno.matricula
         correoAlumno = alumno.correo
-        fechaRegistro = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())
+        fechaRegistro = LocalDate.now().toString()
         etCorreo.setText(correoAlumno)
         etFecha.setText(fechaRegistro)
         actualizarEstadoConfirmacion()
