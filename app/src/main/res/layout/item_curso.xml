@@ -57,48 +57,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="6dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="8dp">
+            android:paddingStart="4dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="10dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVerDetalle"
                 android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="3dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:maxLines="1"
-                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:singleLine="true"
                 android:text="VER DETALLE"
                 android:textColor="#FFFFFF"
+                android:textSize="10sp"
                 android:textStyle="bold"
-                app:autoSizeMaxTextSize="10sp"
-                app:autoSizeMinTextSize="6sp"
-                app:autoSizeTextType="uniform"
                 app:backgroundTint="#21639B"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="6dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegistrarse"
                 android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="3dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="2dp"
                 android:layout_weight="1"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:maxLines="1"
-                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:singleLine="true"
                 android:text="REGISTRARSE"
                 android:textColor="#FFFFFF"
+                android:textSize="10sp"
                 android:textStyle="bold"
-                app:autoSizeMaxTextSize="10sp"
-                app:autoSizeMinTextSize="6sp"
-                app:autoSizeTextType="uniform"
                 app:backgroundTint="#218C50"
-                app:cornerRadius="8dp" />
+                app:cornerRadius="6dp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
