@@ -34,7 +34,8 @@ class CursosAdaptador(
         holder.txtSalon.text = curso.espacio
 
         Glide.with(holder.itemView.context)
-            .load("http://192.168.1.75/sistema_cursos/" + curso.rutaImgGrid)
+            //.load("http://10.175.243.178/sistema_cursos/" + curso.rutaImgGrid)
+            .load("https://medicdate.innego.net/web/apis/movile/sistema_cursos/" + curso.rutaImgGrid)
             .placeholder(android.R.drawable.ic_menu_gallery)
             .error(android.R.drawable.stat_notify_error)
             .into(holder.imgCurso)
