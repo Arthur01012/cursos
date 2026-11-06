@@ -7,7 +7,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object RetrofitCliente {
-    //private const val BASE_URL = "http://10.175.243.178/sistema_cursos/"
     private const val BASE_URL = "https://medicdate.innego.net/web/apis/movile/sistema_cursos/"
     private val jsonConfig = Json{
         ignoreUnknownKeys=true
