@@ -10,6 +10,7 @@ import com.example.cursos.Modelo.dataRespuestaInscripcion
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -23,6 +24,7 @@ interface ApiService {
     @GET("obtener_alumno.php")
     fun obtenerAlumno(@Query("matricula") matricula: String): Call<dataAlumno>
 
+    @Headers("Cache-Control: no-cache")
     @GET("obtener_registros.php")
     fun obtenerRegistros(@Query("idCarrera") idCarrera: Int): Call<List<dataRegistro>>
 
