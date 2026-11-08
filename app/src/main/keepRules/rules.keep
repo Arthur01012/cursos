@@ -1,21 +1,46 @@
-# Add project specific R8 rules here.
-# AGP will combine all keep rule files in src/main/keepRules to pass to R8
-#
-# For more details, see
-#   https://d.android.com/r/tools/r8/keep-rules
+# Preserve annotations and inner classes required for reflection.
+-keepattributes Signature,Annotation,InnerClasses,EnclosingMethod
 
-# Retrofit inspects API method annotations and generic request/response types at runtime.
-# Keep the metadata it needs without preventing R8 from renaming application classes.
--keepattributes Signature,InnerClasses,EnclosingMethod
--keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,AnnotationDefault
+# Obfuscate source-file names and preserve real line numbers.
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
 
-# Retrofit's and kotlinx.serialization's consumer rules retain their runtime entry points.
-# Android Gradle Plugin retains Activities declared in AndroidManifest.xml.
-# Model property names are not pinned: @SerialName defines the JSON field names.
+# Keep all classes and members in the Modelo package.
+-keep class com.example.cursos.Modelo.** { *; }
+-keepclassmembers class com.example.cursos.Modelo.** { *; }
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Keep members annotated with Kotlin serialization annotations.
+-keepclassmembers class * {
+    @kotlinx.serialization.Serializable *;
+}
+-keepclassmembers class * {
+    @kotlinx.serialization.SerialName *;
+}
+
+# Keep generated Kotlin serializers and Companion members.
+-keepclassmembers class *$$serializer { *; }
+-keepclassmembers class * {
+    * Companion;
+}
+
+# Keep API interfaces and HTTP-annotated methods.
+-keep interface com.example.cursos.InterfaceApi.** { *; }
+-keepclassmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+# Suppress warnings for Retrofit, OkHttp, Okio, and Glide.
+-dontwarn retrofit2.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn com.bumptech.glide.**
+
+# Keep OkHttp's public suffix database class name.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Keep Glide modules and their constructors.
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep class * implements com.bumptech.glide.module.GlideModule
+-keepclassmembers class * implements com.bumptech.glide.module.GlideModule {
+    public <init>();
+}
