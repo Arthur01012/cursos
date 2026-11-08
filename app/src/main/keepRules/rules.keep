@@ -4,6 +4,15 @@
 # For more details, see
 #   https://d.android.com/r/tools/r8/keep-rules
 
+# Retrofit inspects API method annotations and generic request/response types at runtime.
+# Keep the metadata it needs without preventing R8 from renaming application classes.
+-keepattributes Signature,InnerClasses,EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations,RuntimeVisibleParameterAnnotations,AnnotationDefault
+
+# Retrofit's and kotlinx.serialization's consumer rules retain their runtime entry points.
+# Android Gradle Plugin retains Activities declared in AndroidManifest.xml.
+# Model property names are not pinned: @SerialName defines the JSON field names.
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:

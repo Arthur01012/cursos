@@ -329,3 +329,31 @@ En esta ejecución el APK original tenía 3,976,800 bytes y el APK resultante 3,
 En el comando se seleccionaron `DebugRemoval` y `Rebuild`. **No** se seleccionaron `ClassRename`, `MethodRename` ni `FieldRename`; por tanto, este proceso no documenta ni afirma que se hayan renombrado clases, métodos o campos. `Rebuild` reconstruye el paquete, pero no es por sí mismo un método de renombrado de código.
 
 No se proporcionaron `--keystore-file`, `--keystore-password`, `--key-alias` ni `--key-password`. Según la ayuda de la CLI, Obfuscapk utiliza su keystore incluida cuando no se especifica una propia. Por ello, no se debe asumir que la firma del APK generado coincide con la del original. Android exige la misma clave de firma para instalar una actualización sobre una aplicación ya instalada; valida la firma y prueba el APK antes de distribuirlo. Para mantener la identidad de firma, se necesita la keystore original y se deben pasar sus datos de forma segura, sin guardarlos en el repositorio ni publicarlos.
+
+## R8 y reglas ProGuard
+
+### Integración actual
+
+El build `release` ya activa la optimización de R8 mediante `optimization.enable = true` en `app/build.gradle.kts`. Android Gradle Plugin combina las reglas de `app/src/main/keepRules/rules.keep` con las reglas predeterminadas y las reglas de consumidor de las dependencias.
+
+El análisis del flujo de la aplicación identificó estas superficies que dependen de metadatos o descubrimiento dinámico:
+
+- **Retrofit:** `RetrofitCliente` crea `ApiService` con `Retrofit.create(ApiService::class.java)`. Retrofit inspecciona en runtime anotaciones HTTP/parámetros (`@GET`, `@POST`, `@Query`, `@Body`) y tipos genéricos como `Call<List<dataCursos>>`.
+- **Kotlin Serialization:** los modelos de respuesta/solicitud usan `@Serializable` y propiedades `@SerialName`; el plugin de Kotlin genera los serializers utilizados por el converter de Retrofit.
+- **Activities:** `CatalogoActivity`, `DetalleActivity`, `RegistroActivity` y `VerRegistroActivity` están declaradas en `AndroidManifest.xml`; no se instancian mediante nombres de clase escritos en código.
+
+Las reglas de consumidor de Retrofit conservan las interfaces de servicio anotadas y atributos requeridos; las reglas de `kotlinx-serialization` conservan los puntos de entrada de los serializers generados. Android Gradle Plugin conserva los componentes del manifiesto. Por eso `rules.keep` solo declara los atributos de anotaciones y tipos genéricos que Retrofit consulta y evita reglas globales como `-keep class com.example.cursos.** { *; }`, que impedirían gran parte del renombrado y eliminación de código no usado.
+
+Los nombres JSON se mantienen estables por `@SerialName`, no por conservar los nombres Kotlin de las propiedades. No se detectaron `WebView` con interfaz JavaScript, carga de clases por nombre (`Class.forName`) ni métodos de callbacks definidos desde XML que requieran reglas personalizadas adicionales.
+
+### Generar y verificar el APK
+
+Desde PowerShell, en la raíz del proyecto:
+
+```powershell
+.\gradlew.bat :app:assembleRelease
+```
+
+El APK de salida se genera en `app/build/outputs/apk/release/app-release-unsigned.apk`. R8 escribe el mapa de nombres en `app/build/outputs/mapping/release/mapping.txt`; consérvalo para poder interpretar stack traces ofuscados de esa misma versión. La configuración R8 combinada se puede inspeccionar en `app/build/outputs/mapping/release/configuration.txt`.
+
+Después de compilar, instala y prueba los flujos principales: cargar carreras/cursos desde Retrofit, abrir detalle, cargar imágenes, consultar datos del alumno, enviar una inscripción y filtrar registros. El APK debe firmarse con la clave de publicación prevista antes de distribuirlo; la configuración actual del build no declara una `signingConfig` de release.
