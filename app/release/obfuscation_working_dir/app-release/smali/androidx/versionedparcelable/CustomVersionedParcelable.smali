@@ -1,0 +1,5 @@
+.class public abstract Landroidx/versionedparcelable/CustomVersionedParcelable;
+.super Ljava/lang/Object;
+
+# interfaces
+.implements Lcy;

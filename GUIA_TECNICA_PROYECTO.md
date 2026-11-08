@@ -267,3 +267,65 @@ Cada enlace debe asociar el botón al curso de la posición actual. Si se usa `t
 - [`dataCursos.kt`](./app/src/main/java/com/example/cursos/Modelo/dataCursos.kt)
 - [`CursosAdaptador.kt`](./app/src/main/java/com/example/cursos/Adaptador/CursosAdaptador.kt)
 - [`obtener_carrera.php`](../../../../../xampp/htdocs/sistema_cursos/obtener_carrera.php)
+
+## obfuscapk
+
+### Objetivo y herramienta
+
+Se utilizó [Obfuscapk](https://github.com/ClaudiuGeorgiu/Obfuscapk), una herramienta que procesa APK existentes, sin necesitar el código fuente para esta etapa. Se ejecutó desde Docker con la imagen `claudiugeorgiu/obfuscapk:latest`; Docker permite usar la herramienta sin instalar sus dependencias de Python y Android en Windows.
+
+La entrada fue el APK Release generado previamente por Gradle:
+
+- APK original: `app/release/app-release.apk`
+- APK generado: `app/release/app-release-obfuscated.apk`
+- Identificador de la aplicación en el APK original: `com.example.cursos`
+- Versión indicada en los metadatos del APK original: `1.0` (código `1`)
+
+### Comprobación de opciones
+
+Antes de procesar el APK, se consultó la ayuda de la imagen para conocer los argumentos y los ofuscadores disponibles:
+
+```powershell
+docker run --rm claudiugeorgiu/obfuscapk:latest -h
+```
+
+La CLI requiere un APK de entrada y al menos una opción `-o`. También acepta `-d` para indicar la ruta del resultado y `-w` para definir dónde guardar los archivos de trabajo.
+
+### Comando utilizado
+
+Desde PowerShell se montó la carpeta `app/release` del proyecto dentro del contenedor como `/work`. Así, el proceso pudo leer la APK original y escribir el resultado en una carpeta compartida con Windows:
+
+```powershell
+docker run --rm -v "C:\Users\PC\OneDrive\Desktop\cursos\app\release:/work" claudiugeorgiu/obfuscapk:latest -o DebugRemoval -o Rebuild -w /work/obfuscation -p -d /work/app-release-obfuscated.apk /work/app-release.apk
+```
+
+Significado de los argumentos principales:
+
+- `--rm`: elimina el contenedor al terminar; no elimina los archivos dentro de la carpeta montada.
+- `-v "...\app\release:/work"`: comparte la carpeta de APK de Windows con el contenedor.
+- `-o DebugRemoval`: solicita eliminar información de depuración de la aplicación.
+- `-o Rebuild`: reconstruye el APK procesado y permite producir el archivo final.
+- `-w /work/obfuscation`: guarda archivos intermedios en esa carpeta del volumen compartido.
+- `-p`: muestra el progreso.
+- `-d /work/app-release-obfuscated.apk`: fija el nombre y la ubicación del APK resultante.
+- `/work/app-release.apk`: indica el APK de entrada, visto desde dentro del contenedor.
+
+`/work/...` es una ruta del contenedor, no una ruta de Windows. Como `/work` está montado sobre `app/release`, el archivo de salida aparece en la carpeta `app/release` del proyecto.
+
+### Resultado y verificación
+
+Al finalizar, el archivo generado fue `app/release/app-release-obfuscated.apk`. Se verificó su existencia con PowerShell:
+
+```powershell
+Test-Path "C:\Users\PC\OneDrive\Desktop\cursos\app\release\app-release-obfuscated.apk"
+```
+
+El comando debe ejecutarse por separado del comando `docker run`; si se pega inmediatamente al final de este, Docker interpreta `Test-Path` y sus argumentos como opciones adicionales de Obfuscapk y muestra un error de argumentos.
+
+En esta ejecución el APK original tenía 3,976,800 bytes y el APK resultante 3,899,591 bytes. El cambio de tamaño por sí solo no demuestra que la aplicación esté protegida ni que siga funcionando correctamente: hay que instalar y probar el APK generado en un dispositivo o emulador.
+
+### Alcance y firma
+
+En el comando se seleccionaron `DebugRemoval` y `Rebuild`. **No** se seleccionaron `ClassRename`, `MethodRename` ni `FieldRename`; por tanto, este proceso no documenta ni afirma que se hayan renombrado clases, métodos o campos. `Rebuild` reconstruye el paquete, pero no es por sí mismo un método de renombrado de código.
+
+No se proporcionaron `--keystore-file`, `--keystore-password`, `--key-alias` ni `--key-password`. Según la ayuda de la CLI, Obfuscapk utiliza su keystore incluida cuando no se especifica una propia. Por ello, no se debe asumir que la firma del APK generado coincide con la del original. Android exige la misma clave de firma para instalar una actualización sobre una aplicación ya instalada; valida la firma y prueba el APK antes de distribuirlo. Para mantener la identidad de firma, se necesita la keystore original y se deben pasar sus datos de forma segura, sin guardarlos en el repositorio ni publicarlos.
